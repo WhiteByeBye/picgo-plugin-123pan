@@ -1,6 +1,6 @@
 {
   "name": "picgo-plugin-123pan",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "PicGo plugin for 123pan image hosting",
   "main": "src/index.js",
   "keywords": [
