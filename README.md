@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/picgo-plugin-123pan.svg?style=flat-square)](https://www.npmjs.com/package/picgo-plugin-123pan)
 [![downloads](https://img.shields.io/npm/dt/picgo-plugin-123pan.svg?style=flat-square)](https://www.npmjs.com/package/picgo-plugin-123pan)
-[![license](https://img.shields.io/npm/l/picgo-plugin-123pan.svg?style=flat-square)](https://github.com/your-github-username/picgo-plugin-123pan/blob/master/LICENSE)  
+[![license](https://img.shields.io/npm/l/picgo-plugin-123pan.svg?style=flat-square)](https://github.com/WhiteByeBye/picgo-plugin-123pan/blob/master/LICENSE)  
 A PicGo plugin to upload images to [123pan (123云盘)](https://www.123pan.com/). This plugin leverages the official 123pan OpenAPI for secure and efficient uploads.
 
 ## Features
