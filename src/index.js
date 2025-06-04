@@ -216,7 +216,9 @@ async function createFile(ctx, accessToken, parentFileID, filename, etag, size) 
     };
 
     const data = JSON.stringify({
+        // Support both parameter names in case the API changes
         parentFileID: parentFileID,
+        parentFileId: parentFileID,
         filename: filename,
         etag: etag,
         size: size,
