@@ -1385,10 +1385,13 @@ module.exports = (ctx) => {
         ]
     }
 
-    return {
+return {
         uploader: '123pan',
         register,
         guiMenu,    // Add guiMenu for GUI features
         commands    // Add keyboard shortcuts
     };
 };
+
+// Export utility functions for testing purposes
+module.exports.sanitizeFilename = sanitizeFilename;
