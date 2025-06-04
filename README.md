@@ -165,6 +165,8 @@ Setting a parent folder name in the configuration will:
 2. Find the folder ID if it already exists
 3. Use that folder for all uploads
 
+The folder creation uses 123pan's `mkdir` API as detailed in [docs.md](docs.md).
+
 ### API Token Management
 
 The plugin automatically handles token refresh and maintains a 5-minute buffer before expiration to ensure seamless uploads.

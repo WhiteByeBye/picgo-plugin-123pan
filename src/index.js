@@ -113,8 +113,15 @@ async function createDirectory(ctx, accessToken, parentID, dirName) {
     try {
         ctx.log.info(`Creating directory: ${sanitizedName} under parent ID: ${normalizedParentID || 'root'}`);
         const res = await makeRequest(options, data);
-        ctx.log.info(`Directory created successfully with ID: ${res.data.fileID}`);
-        return res;
+        // mkdir API returns data.list with dirID of created folder
+        const dirID = safeGet(res, 'data.list.0.dirID', null);
+        if (dirID) {
+            ctx.log.info(`Directory created successfully with ID: ${dirID}`);
+            return { code: 0, data: { fileID: dirID } };
+        } else {
+            ctx.log.warn(`mkdir response did not contain dirID: ${JSON.stringify(res)}`);
+            return res;
+        }
     } catch (err) {
         // Try to handle common errors
         const errorMessage = err.message.toLowerCase();
@@ -131,8 +138,9 @@ async function createDirectory(ctx, accessToken, parentID, dirName) {
                 if (fileList && fileList.data && Array.isArray(fileList.data.fileList)) {
                     for (const file of fileList.data.fileList) {
                         if (file.filename === sanitizedName && file.type === 1) {
-                            ctx.log.info(`Found existing directory ID: ${file.fileID}`);
-                            return { code: 0, data: { fileID: file.fileID } };
+                            const existingId = file.fileID || file.fileId || file.dirID;
+                            ctx.log.info(`Found existing directory ID: ${existingId}`);
+                            return { code: 0, data: { fileID: existingId } };
                         }
                     }
                 } else {
@@ -172,6 +180,7 @@ async function getFileList(ctx, accessToken, parentFileID = "") {
     
     const data = JSON.stringify({
         parentFileID: normalizedParentID,
+        parentFileId: normalizedParentID,
         limit: 100,
     });
 
@@ -957,10 +966,11 @@ async function handleAsyncPolling(ctx, options) {
         if (fileList && fileList.data && Array.isArray(fileList.data.fileList)) {
             for (const file of fileList.data.fileList) {
                 if (file.filename === fileName) {
-                    ctx.log.info(`Found uploaded file immediately in directory: ${file.fileID}`);
+                    const foundId = file.fileID || file.fileId || file.dirID;
+                    ctx.log.info(`Found uploaded file immediately in directory: ${foundId}`);
                     return {
                         completed: true,
-                        fileID: file.fileID
+                        fileID: foundId
                     };
                 }
             }
@@ -1008,10 +1018,11 @@ async function handleAsyncPolling(ctx, options) {
                     if (fileList && fileList.data && Array.isArray(fileList.data.fileList)) {
                         for (const file of fileList.data.fileList) {
                             if (file.filename === fileName) {
-                                ctx.log.info(`Found uploaded file in directory during polling: ${file.fileID}`);
+                                const foundId = file.fileID || file.fileId || file.dirID;
+                                ctx.log.info(`Found uploaded file in directory during polling: ${foundId}`);
                                 return {
                                     completed: true,
-                                    fileID: file.fileID
+                                    fileID: foundId
                                 };
                             }
                         }
@@ -1049,10 +1060,11 @@ async function handleAsyncPolling(ctx, options) {
                         if (fileList && fileList.data && Array.isArray(fileList.data.fileList)) {
                             for (const file of fileList.data.fileList) {
                                 if (file.filename === fileName) {
-                                    ctx.log.info(`Found uploaded file in final lookup: ${file.fileID}`);
+                                    const foundId = file.fileID || file.fileId || file.dirID;
+                                    ctx.log.info(`Found uploaded file in final lookup: ${foundId}`);
                                     return {
                                         completed: true,
-                                        fileID: file.fileID
+                                        fileID: foundId
                                     };
                                 }
                             }
@@ -1104,10 +1116,11 @@ async function handleAsyncPolling(ctx, options) {
             if (fileList && fileList.data && Array.isArray(fileList.data.fileList)) {
                 for (const file of fileList.data.fileList) {
                     if (file.filename === fileName) {
-                        ctx.log.info(`Found uploaded file in timeout lookup: ${file.fileID}`);
+                        const foundId = file.fileID || file.fileId || file.dirID;
+                        ctx.log.info(`Found uploaded file in timeout lookup: ${foundId}`);
                         return {
                             completed: true,
-                            fileID: file.fileID
+                            fileID: foundId
                         };
                     }
                 }
