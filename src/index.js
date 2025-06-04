@@ -358,8 +358,9 @@ async function uploadFileSlice(ctx, url, buffer) {
 
 // Utility function to validate and sanitize filenames
 function sanitizeFilename(filename) {
-    // Remove characters not allowed by 123pan: "V:*?|><
-    let sanitized = filename.replace(/["\V:*?|><]/g, '_');
+    // Remove characters not allowed by 123pan or Windows filesystems
+    // Characters: \ / : * ? " < > |
+    let sanitized = filename.replace(/[\/:*?"<>|]/g, '_');
     
     // Ensure the filename is under 255 characters
     if (sanitized.length > 254) {
