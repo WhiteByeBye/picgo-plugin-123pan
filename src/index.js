@@ -101,7 +101,7 @@ async function createDirectory(ctx, accessToken, parentID, dirName) {
     };
 
     // Sanitize the directory name and normalize parent ID
-    const sanitizedName = sanitizeFilename(dirName);
+    const sanitizedName = sanitizeFolderName(dirName);
     const normalizedParentID = normalizeParentFileID(parentID);
 
     const data = JSON.stringify({
@@ -371,6 +371,13 @@ function sanitizeFilename(filename) {
     }
     
     return sanitized;
+}
+
+// Utility specifically for directory names
+function sanitizeFolderName(folderName) {
+    if (!folderName) return '';
+    const trimmed = folderName.replace(/^\/+|\/+$/g, '');
+    return sanitizeFilename(trimmed);
 }
 
 // Ensure parentFileID is in the correct format
@@ -1395,3 +1402,4 @@ return {
 
 // Export utility functions for testing purposes
 module.exports.sanitizeFilename = sanitizeFilename;
+module.exports.sanitizeFolderName = sanitizeFolderName;
